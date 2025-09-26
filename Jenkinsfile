@@ -2,43 +2,40 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'
-        jdk 'Java21'
+        maven 'Maven'    // 👈 must match the name you configured in Jenkins > Global Tool Configuration
+        jdk 'Java21'     // 👈 or Java17, depending on your setup
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/cabdiasismohamed/GroupTask-Tests.git'
+                git branch: 'main',
+                    url: 'https://github.com/cabdiasismohamed/GroupTask-Tests.git'
             }
         }
 
         stage('Build') {
             steps {
-                bat 'mvn clean compile'
+                bat 'mvn clean package'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat 'mvn -Dtest=*Test test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+                bat 'mvn test -Dgroups=unit'
             }
         }
 
         stage('Integration Tests') {
             steps {
-                bat 'mvn -Dtest=*IT verify'
+                bat 'mvn test -Dgroups=integration'
             }
-            post {
-                always {
-                    junit 'target/failsafe-reports/*.xml'
-                }
-            }
+        }
+    }
+
+    post {
+        always {
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
