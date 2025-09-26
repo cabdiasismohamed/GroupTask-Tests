@@ -1,50 +1,48 @@
-import org.testng.annotations.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static org.junit.Assert.*;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MenuPanelAppIT {
 
     private static MenuPanelApp app;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         SwingUtilities.invokeAndWait(() -> app = new MenuPanelApp());
     }
 
     @Test
     public void testFrameInitialization() {
-        assertNotNull("Frame should not be null", app.frame);
+        assertNotNull(app.frame, "Frame should not be null");
         assertEquals("Swing Application with Panels & Menu", app.frame.getTitle());
-        assertTrue("Frame should be visible", app.frame.isVisible());
+        assertTrue(app.frame.isVisible(), "Frame should be visible");
     }
 
     @Test
     public void testMenuInitialization() {
         JMenuBar menuBar = app.frame.getJMenuBar();
-        assertNotNull("Menu bar should not be null", menuBar);
-        assertEquals("There should be 2 menus (Navigate, File)", 2, menuBar.getMenuCount());
+        assertNotNull(menuBar, "Menu bar should not be null");
+        assertEquals(2, menuBar.getMenuCount(), "There should be 2 menus (Navigate, File)");
 
         JMenu navigateMenu = menuBar.getMenu(0);
         assertEquals("Navigate", navigateMenu.getText());
-        assertEquals("Navigate should have 3 items", 3, navigateMenu.getItemCount());
+        assertEquals(3, navigateMenu.getItemCount(), "Navigate should have 3 items");
 
         JMenu fileMenu = menuBar.getMenu(1);
         assertEquals("File", fileMenu.getText());
-        assertEquals("File should have 1 item", 1, fileMenu.getItemCount());
+        assertEquals(1, fileMenu.getItemCount(), "File should have 1 item");
     }
 
     @Test
     public void testCardLayoutInitialization() {
-        assertNotNull("CardLayout should not be null", app.card);
-        assertNotNull("Main panel should not be null", app.main);
-        assertEquals("Main should contain 3 panels", 3, app.main.getComponentCount());
+        assertNotNull(app.card, "CardLayout should not be null");
+        assertNotNull(app.main, "Main panel should not be null");
+        assertEquals(3, app.main.getComponentCount(), "Main should contain 3 panels");
     }
 
     @Test
@@ -70,7 +68,7 @@ public class MenuPanelAppIT {
         return null;
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         if (app.frame != null) {
             app.frame.dispose();
