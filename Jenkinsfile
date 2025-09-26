@@ -15,27 +15,30 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
+                bat 'mvn clean compile'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh 'mvn test'
+                bat 'mvn -Dtest=*Test test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
         stage('Integration Tests') {
             steps {
-                sh 'mvn verify'
+                bat 'mvn -Dtest=*IT verify'
             }
-        }
-    }
-
-    post {
-        always {
-            junit 'target/surefire-reports/*.xml'
-            junit 'target/failsafe-reports/*.xml'
+            post {
+                always {
+                    junit 'target/failsafe-reports/*.xml'
+                }
+            }
         }
     }
 }
